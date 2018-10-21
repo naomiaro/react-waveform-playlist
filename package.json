@@ -5,7 +5,8 @@
   "dependencies": {
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-scripts": "2.0.5"
+    "react-scripts": "2.0.5",
+    "styled-components": "^4.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@storybook/addon-actions": "^4.0.0-alpha.25",
     "@storybook/react": "^4.0.0-alpha.25",
-    "babel-core": "^6.26.3"
+    "babel-core": "^6.26.3",
+    "babel-plugin-styled-components": "^1.8.0"
   }
 }
