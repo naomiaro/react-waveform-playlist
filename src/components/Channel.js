@@ -1,9 +1,25 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
+
+const Waveform = styled.canvas`
+  width: ${props => props.cssWidth}px;
+  height: ${props => props.cssHeight}px;
+`;
 
 class Channel extends Component {
   constructor(props) {
     super(props);
-    this.canvas = React.createRef();
+
+    this.setCanvasRef = canvas => {
+      if (canvas) {
+        const scale = window.devicePixelRatio;
+        // Normalize coordinate system to use css pixels.
+        const cc = canvas.getContext('2d');
+        cc.scale(scale, scale);
+      }
+
+      this.canvas = canvas;
+    };
   }
 
   componentDidMount() {
@@ -16,8 +32,9 @@ class Channel extends Component {
 
   draw() {
     const { peaks, bits, length } = this.props;
-    const canvas = this.canvas.current;
-    const height = canvas.height;
+    const scale = window.devicePixelRatio;
+    const canvas = this.canvas;
+    const height = canvas.height / scale;
     const width = canvas.width;
     const cc = canvas.getContext('2d');
     const h2 = height / 2;
@@ -43,7 +60,15 @@ class Channel extends Component {
 
   render() {
     const { length } = this.props;
-    return <canvas width={length} height="80" ref={this.canvas} />;
+    const height = 80;
+    const scale = window.devicePixelRatio;
+
+    return <Waveform
+      cssWidth={ length }
+      cssHeight={ height }
+      width={ length * scale }
+      height={ height * scale }
+      ref={ this.setCanvasRef } />;
   }
 }
 
