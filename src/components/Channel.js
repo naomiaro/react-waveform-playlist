@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 
 const Waveform = styled.canvas`
   width: ${props => props.cssWidth}px;
@@ -31,18 +31,17 @@ class Channel extends Component {
   }
 
   draw() {
-    const { peaks, bits, length } = this.props;
-    const scale = window.devicePixelRatio;
+    const { peaks, bits, length, theme } = this.props;
     const canvas = this.canvas;
-    const height = canvas.height / scale;
-    const width = canvas.width;
+    const height = theme.waveHeight;
+    const width = length;
     const cc = canvas.getContext('2d');
     const h2 = height / 2;
     const maxValue = 2 ** (bits - 1);
     const offset = 0;
 
     cc.clearRect(0, 0, width, height);
-    cc.fillStyle = '#000';
+    cc.fillStyle = theme.waveOutlineColor;
 
     for (let i = 0; i < width; i += 1) {
       const minPeak = peaks[(i + offset) * 2] / maxValue;
@@ -59,8 +58,8 @@ class Channel extends Component {
   }
 
   render() {
-    const { length } = this.props;
-    const height = 80;
+    const { length, theme } = this.props;
+    const height = theme.waveHeight;
     const scale = window.devicePixelRatio;
 
     return <Waveform
@@ -72,4 +71,13 @@ class Channel extends Component {
   }
 }
 
-export default Channel;
+Channel.defaultProps = {
+  theme: {
+    // color of the waveform outline
+    waveOutlineColor: 'black',
+    // height in CSS pixels of each canvas element a waveform is on.
+    waveHeight: 80,
+  },
+};
+
+export default withTheme(Channel);

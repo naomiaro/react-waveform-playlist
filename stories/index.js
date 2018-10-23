@@ -1,4 +1,5 @@
 import React from 'react';
+import { ThemeProvider } from 'styled-components';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import Channel from '../src/components/Channel';
@@ -13,9 +14,19 @@ const {
   data
 } = BBCWaveformData;
 
+const theme = {
+  waveOutlineColor: 'green',
+  waveHeight: 65,
+};
+
 storiesOf('Channel', module)
   .add('With BBC Waveform Peaks', () => (
     <Channel peaks={data} length={length} bits={bits}></Channel>
+  ))
+  .add('With BBC Waveform Peaks and a custom theme', () => (
+    <ThemeProvider theme={theme}>
+      <Channel peaks={data} length={length} bits={bits}></Channel>
+    </ThemeProvider>
   ));
 
 storiesOf('TimeScale', module)
