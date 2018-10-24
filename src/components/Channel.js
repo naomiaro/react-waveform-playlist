@@ -26,18 +26,16 @@ class Channel extends Component {
   draw() {
     const { peaks, bits, length, waveHeight, theme, scale } = this.props;
     const canvas = this.canvas;
-    const height = waveHeight;
-    const width = length;
     const cc = canvas.getContext('2d');
-    const h2 = height / 2;
+    const h2 = waveHeight / 2;
     const maxValue = 2 ** (bits - 1);
     const offset = 0;
 
-    cc.clearRect(0, 0, width, height);
+    cc.clearRect(0, 0, canvas.width, canvas.height);
     cc.fillStyle = theme.waveOutlineColor;
     cc.scale(scale, scale);
 
-    for (let i = 0; i < width; i += 1) {
+    for (let i = 0; i < length; i += 1) {
       const minPeak = peaks[(i + offset) * 2] / maxValue;
       const maxPeak = peaks[((i + offset) * 2) + 1] / maxValue;
       
