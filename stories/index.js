@@ -33,6 +33,11 @@ storiesOf('Channel', module)
   ))
   .add('BBC Waveform Peaks & devicePixelRatio & theming.', () => (
     <ThemeProvider theme={theme}>
+      <Channel peaks={data} length={length} bits={bits} scale={scale}></Channel>
+    </ThemeProvider>
+  ))
+  .add('BBC Waveform Peaks & devicePixelRatio & theming & custom waveform height.', () => (
+    <ThemeProvider theme={theme}>
       <Channel peaks={data} length={length} bits={bits} scale={scale} waveHeight={65}></Channel>
     </ThemeProvider>
   ));
