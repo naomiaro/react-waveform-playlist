@@ -72,6 +72,9 @@ Channel.defaultProps = {
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
+  peaks: [],
+  length: 0,
+  bits: 0,
 };
 
 export default withTheme(Channel);

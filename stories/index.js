@@ -23,6 +23,9 @@ const theme = {
 const scale = window.devicePixelRatio;
 
 storiesOf('Channel', module)
+  .add('Default Values.', () => (
+    <Channel></Channel>
+  ))
   .add('BBC Waveform Peaks.', () => (
     <Channel peaks={data} length={length} bits={bits}></Channel>
   ))
