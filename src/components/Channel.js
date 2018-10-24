@@ -11,13 +11,6 @@ class Channel extends Component {
     super(props);
 
     this.setCanvasRef = canvas => {
-      if (canvas) {
-        const { scale } = this.props;
-        // Normalize coordinate system to use css pixels.
-        const cc = canvas.getContext('2d');
-        cc.scale(scale, scale);
-      }
-
       this.canvas = canvas;
     };
   }
@@ -31,7 +24,7 @@ class Channel extends Component {
   }
 
   draw() {
-    const { peaks, bits, length, theme } = this.props;
+    const { peaks, bits, length, theme, scale } = this.props;
     const canvas = this.canvas;
     const height = theme.waveHeight;
     const width = length;
@@ -42,6 +35,7 @@ class Channel extends Component {
 
     cc.clearRect(0, 0, width, height);
     cc.fillStyle = theme.waveOutlineColor;
+    cc.scale(scale, scale);
 
     for (let i = 0; i < width; i += 1) {
       const minPeak = peaks[(i + offset) * 2] / maxValue;
@@ -76,6 +70,7 @@ Channel.defaultProps = {
     // height in CSS pixels of each canvas element a waveform is on.
     waveHeight: 80,
   },
+  // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
 };
 
