@@ -1,7 +1,29 @@
 import React, { Component } from 'react';
 import styled, { withTheme } from 'styled-components';
 
+const Progress = styled.div`
+  position: absolute;
+  transform: translateZ(0);
+  will-change: transform;
+  background: ${props => props.theme.waveProgressColor};
+  width: ${props => props.progress}px;
+  height: ${props => props.waveHeight}px;
+`;
+
 const Waveform = styled.canvas`
+  float: left;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  width: ${props => props.cssWidth}px;
+  height: ${props => props.waveHeight}px;
+`;
+
+const ChannelWrapper = styled.div`
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  background: ${props => props.theme.waveFillColor};
   width: ${props => props.cssWidth}px;
   height: ${props => props.waveHeight}px;
 `;
@@ -50,13 +72,22 @@ class Channel extends Component {
   }
 
   render() {
-    const { length, waveHeight, scale } = this.props;
+    const {
+      length,
+      waveHeight,
+      scale,
+      progress,
+      theme,
+    } = this.props;
 
-    return <Waveform
-      cssWidth={ length }
-      width={ length * scale }
-      height={ waveHeight * scale }
-      ref={ this.setCanvasRef } />;
+    return <ChannelWrapper cssWidth={length} theme={theme} waveHeight={waveHeight}>
+      <Progress progress={progress} theme={theme} waveHeight={waveHeight} />
+      <Waveform
+        cssWidth={length}
+        width={length * scale}
+        height={waveHeight * scale}
+        ref={this.setCanvasRef} />
+    </ChannelWrapper>;
   }
 }
 
@@ -64,6 +95,8 @@ Channel.defaultProps = {
   theme: {
     // color of the waveform outline
     waveOutlineColor: 'black',
+    waveFillColor: 'grey',
+    waveProgressColor: 'orange',
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
@@ -72,6 +105,8 @@ Channel.defaultProps = {
   bits: 0,
   // height in CSS pixels of each canvas element a waveform is on.
   waveHeight: 80,
+  // width in CSS pixels of the progress on the channel.
+  progress: 0,
 };
 
 export default withTheme(Channel);

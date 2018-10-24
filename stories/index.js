@@ -16,6 +16,8 @@ const {
 
 const theme = {
   waveOutlineColor: 'green',
+  waveFillColor: 'white',
+  waveProgressColor: 'yellow',
   timeColor: 'red',
 };
 
@@ -31,9 +33,17 @@ storiesOf('Channel', module)
   .add('BBC Waveform Peaks & devicePixelRatio.', () => (
     <Channel peaks={data} length={length} bits={bits} scale={scale}></Channel>
   ))
+  .add('BBC Waveform Peaks & devicePixelRatio & progress.', () => (
+    <Channel peaks={data} length={length} bits={bits} scale={scale} progress={100}></Channel>
+  ))
   .add('BBC Waveform Peaks & devicePixelRatio & theming.', () => (
     <ThemeProvider theme={theme}>
       <Channel peaks={data} length={length} bits={bits} scale={scale}></Channel>
+    </ThemeProvider>
+  ))
+  .add('BBC Waveform Peaks & devicePixelRatio & theming & progress.', () => (
+    <ThemeProvider theme={theme}>
+      <Channel peaks={data} length={length} bits={bits} scale={scale} progress={100}></Channel>
     </ThemeProvider>
   ))
   .add('BBC Waveform Peaks & devicePixelRatio & theming & custom waveform height.', () => (
