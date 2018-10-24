@@ -17,28 +17,29 @@ const {
 const theme = {
   waveOutlineColor: 'green',
   waveHeight: 65,
+  timeColor: 'red',
 };
 
 const scale = window.devicePixelRatio;
 
 storiesOf('Channel', module)
-  .add('BBC Waveform Peaks', () => (
+  .add('BBC Waveform Peaks.', () => (
     <Channel peaks={data} length={length} bits={bits}></Channel>
   ))
-  .add('BBC Waveform Peaks & devicePixelRatio', () => (
+  .add('BBC Waveform Peaks & devicePixelRatio.', () => (
     <Channel peaks={data} length={length} bits={bits} scale={scale}></Channel>
   ))
-  .add('BBC Waveform Peaks & devicePixelRatio & theming', () => (
+  .add('BBC Waveform Peaks & devicePixelRatio & theming.', () => (
     <ThemeProvider theme={theme}>
       <Channel peaks={data} length={length} bits={bits} scale={scale}></Channel>
     </ThemeProvider>
   ));
 
 storiesOf('TimeScale', module)
-  .add('Default Values', () => (
+  .add('Default Values.', () => (
     <TimeScale></TimeScale>
   ))
-  .add('Default Values + device scale', () => (
+  .add('Default Values + device scale.', () => (
     <TimeScale scale={scale}></TimeScale>
   ))
   .add('Default Values + 100 controlWidth + device scale.', () => (
@@ -46,4 +47,9 @@ storiesOf('TimeScale', module)
   ))
   .add('With 60 second duration at 3000 samplesPerPixel, 48000 sampleRate, 0 controlWidth + device scale.', () => (
     <TimeScale duration={60} samplesPerPixel={3000} scale={scale}></TimeScale>
+  ))
+  .add('With theme + device scale.', () => (
+    <ThemeProvider theme={theme}>
+      <TimeScale scale={scale}></TimeScale>
+    </ThemeProvider>
   ));
