@@ -35,12 +35,15 @@ storiesOf('Channel', module)
   ));
 
 storiesOf('TimeScale', module)
-  .add('With 30 second duration at 1500 samplesPerPixel, 0 controlWidth.', () => (
-    <TimeScale duration={30} samplesPerPixel={1500} sampleRate={48000} controlWidth={0}></TimeScale>
+  .add('Default Values', () => (
+    <TimeScale></TimeScale>
   ))
-  .add('With 30 second duration at 1500 samplesPerPixel, 100 controlWidth.', () => (
-    <TimeScale duration={30} samplesPerPixel={1500} sampleRate={48000} controlWidth={100}></TimeScale>
+  .add('Default Values + device scale', () => (
+    <TimeScale scale={scale}></TimeScale>
   ))
-  .add('With 60 second duration at 10000 samplesPerPixel, 0 controlWidth.', () => (
-    <TimeScale duration={60} samplesPerPixel={10000} sampleRate={48000} controlWidth={0}></TimeScale>
+  .add('Default Values + 100 controlWidth + device scale.', () => (
+    <TimeScale controlWidth={100} scale={scale}></TimeScale>
+  ))
+  .add('With 60 second duration at 3000 samplesPerPixel, 48000 sampleRate, 0 controlWidth + device scale.', () => (
+    <TimeScale duration={60} samplesPerPixel={3000} scale={scale}></TimeScale>
   ));

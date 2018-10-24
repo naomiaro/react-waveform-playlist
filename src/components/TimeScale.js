@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import { secondsToPixels } from '../utils/conversions';
 
 const TIME_INFO = {
@@ -84,14 +84,14 @@ const PlaylistTimeScale = styled.div`
 
 const PlaylistTimeScaleScroll = styled.div`
   position: absolute;
-  width: ${props => props.width}px;
+  width: ${props => props.cssWidth}px;
   height: 100%;
 `;
 
 const TimeTicks = styled.canvas`
   position: absolute;
-  width: ${props => props.width}px;
-  height: 10px;
+  width: ${props => props.cssWidth}px;
+  height: ${props => props.timeScaleHeight}px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -105,12 +105,13 @@ const TimeStamp = styled.div`
 class TimeScale extends Component {
   constructor(props) {
     super(props);
-    this.canvas = React.createRef();
+    
+    this.setCanvasRef = canvas => {
+      this.canvas = canvas;
+    };
   }
 
   componentDidMount() {
-    const canvas = this.canvas.current;
-    canvas.height = 10;
     this.draw();
   }
 
@@ -119,26 +120,24 @@ class TimeScale extends Component {
   }
 
   draw() {
-    const canvas = this.canvas.current;
+    const canvas = this.canvas;
     const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const { theme, scale, timeScaleHeight } = this.props;
 
-    const { duration, samplesPerPixel, sampleRate} = this.props;
-    const width = secondsToPixels(duration, samplesPerPixel, sampleRate);
-    const height = canvas.height;
-    canvas.width = width;
-    ctx.fillStyle = '#000';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = theme.timeColor;
+    ctx.scale(scale, scale);
 
     Object.keys(this.canvasInfo).forEach((x) => {
       const scaleHeight = this.canvasInfo[x];
-      const scaleY = height - scaleHeight;
+      const scaleY = timeScaleHeight - scaleHeight;
       ctx.fillRect(x, scaleY, 1, scaleHeight);
     });
   }
 
   // duration, samplesPerPixel, sampleRate, controlWidth, color
   render() {
-    const { duration, samplesPerPixel, sampleRate, controlWidth} = this.props;
+    const { duration, samplesPerPixel, sampleRate, controlWidth, scale, timeScaleHeight} = this.props;
     const widthX = secondsToPixels(duration, samplesPerPixel, sampleRate);
     const pixPerSec = sampleRate / samplesPerPixel;
     const scaleInfo = getScaleInfo(samplesPerPixel);
@@ -153,11 +152,11 @@ class TimeScale extends Component {
       if (scaleInfo.marker && (counter % scaleInfo.marker === 0)) {
         const timestamp = formatTime(counter);
         timeMarkers.push(<TimeStamp key={timestamp} pix={pix}>{timestamp}</TimeStamp>);
-        canvasInfo[pix] = 10;
+        canvasInfo[pix] = timeScaleHeight;
       } else if (scaleInfo.bigStep && (counter % scaleInfo.bigStep === 0)) {
-        canvasInfo[pix] = 5;
+        canvasInfo[pix] = Math.floor(timeScaleHeight / 2);
       } else if (scaleInfo.smallStep && (counter % scaleInfo.smallStep === 0)) {
-        canvasInfo[pix] = 2;
+        canvasInfo[pix] = Math.floor(timeScaleHeight / 5);
       }
 
       counter += (1000 * scaleInfo.secondStep);
@@ -170,11 +169,28 @@ class TimeScale extends Component {
       <PlaylistTimeScale controlWidth={controlWidth}>
         <PlaylistTimeScaleScroll width={widthX}>
           {timeMarkers}
-          <TimeTicks width={widthX} ref={this.canvas}></TimeTicks>
+          <TimeTicks
+            cssWidth={ widthX }
+            width={widthX * scale} height={timeScaleHeight * scale} ref={this.setCanvasRef}></TimeTicks>
         </PlaylistTimeScaleScroll>
       </PlaylistTimeScale>
     );
   }
 }
 
-export default TimeScale;
+TimeScale.defaultProps = {
+  theme: {
+    // color of the time ticks on the canvas
+    timeColor: 'grey',
+  },
+  // checking `window.devicePixelRatio` when drawing to canvas.
+  scale: 1,
+  // time length in seconds
+  duration: 30,
+  samplesPerPixel: 1000,
+  sampleRate: 48000,
+  controlWidth: 0,
+  timeScaleHeight: 10,
+};
+
+export default withTheme(TimeScale);
