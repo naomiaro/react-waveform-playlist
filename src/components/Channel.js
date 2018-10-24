@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import styled, { withTheme } from 'styled-components';
 
+const MAX_CANVAS_WIDTH = 1000;
+
 const Progress = styled.div`
   position: absolute;
-  transform: translateZ(0);
-  will-change: transform;
   background: ${props => props.theme.waveProgressColor};
   width: ${props => props.progress}px;
   height: ${props => props.waveHeight}px;
@@ -31,10 +31,11 @@ const ChannelWrapper = styled.div`
 class Channel extends Component {
   constructor(props) {
     super(props);
+    this.canvases = [];
+  }
 
-    this.setCanvasRef = canvas => {
-      this.canvas = canvas;
-    };
+  shouldComponentUpdate() {
+    this.canvases = [];
   }
 
   componentDidMount() {
@@ -47,28 +48,38 @@ class Channel extends Component {
 
   draw() {
     const { peaks, bits, length, waveHeight, theme, scale } = this.props;
-    const canvas = this.canvas;
-    const cc = canvas.getContext('2d');
-    const h2 = waveHeight / 2;
-    const maxValue = 2 ** (bits - 1);
-    const offset = 0;
 
-    cc.clearRect(0, 0, canvas.width, canvas.height);
-    cc.fillStyle = theme.waveOutlineColor;
-    cc.scale(scale, scale);
+    let offset = 0;
+    for (let i = 0; i < this.canvases.length; i++) {
+      const canvas = this.canvases[i];
+      const cc = canvas.getContext('2d');
+      const h2 = waveHeight / 2;
+      const maxValue = 2 ** (bits - 1);
 
-    for (let i = 0; i < length; i += 1) {
-      const minPeak = peaks[(i + offset) * 2] / maxValue;
-      const maxPeak = peaks[((i + offset) * 2) + 1] / maxValue;
-      
-      const min = Math.abs(minPeak * h2);
-      const max = Math.abs(maxPeak * h2);
+      cc.clearRect(0, 0, canvas.width, canvas.height);
+      cc.fillStyle = theme.waveOutlineColor;
+      cc.scale(scale, scale);
 
-      // draw max
-      cc.fillRect(i, 0, 1, h2 - max);
-      // draw min
-      cc.fillRect(i, h2 + min, 1, h2 - min);
-    }
+      const peakSegmentLength = canvas.width / scale;
+      for (let i = 0; i < peakSegmentLength; i += 1) {
+        const minPeak = peaks[(i + offset) * 2] / maxValue;
+        const maxPeak = peaks[((i + offset) * 2) + 1] / maxValue;
+        
+        const min = Math.abs(minPeak * h2);
+        const max = Math.abs(maxPeak * h2);
+
+        // draw max
+        cc.fillRect(i, 0, 1, h2 - max);
+        // draw min
+        cc.fillRect(i, h2 + min, 1, h2 - min);
+      }
+
+      offset += MAX_CANVAS_WIDTH;
+    }  
+  }
+
+  createCanvasRef(i) {
+    return (canvas) => {this.canvases[i] = canvas}
   }
 
   render() {
@@ -80,13 +91,27 @@ class Channel extends Component {
       theme,
     } = this.props;
 
+    let totalWidth = length;
+    let waveformCount = 0;
+    const waveforms = [];
+    while (totalWidth > 0) {
+      const currentWidth = Math.min(totalWidth, MAX_CANVAS_WIDTH);
+      const waveform = <Waveform
+        key={`${length}-${waveformCount}`}
+        cssWidth={currentWidth}
+        width={currentWidth * scale}
+        height={waveHeight * scale}
+        waveHeight={waveHeight}
+        ref={this.createCanvasRef(waveformCount)} />
+
+      waveforms.push(waveform);
+      totalWidth -= currentWidth;
+      waveformCount += 1;
+    }
+
     return <ChannelWrapper cssWidth={length} theme={theme} waveHeight={waveHeight}>
       <Progress progress={progress} theme={theme} waveHeight={waveHeight} />
-      <Waveform
-        cssWidth={length}
-        width={length * scale}
-        height={waveHeight * scale}
-        ref={this.setCanvasRef} />
+      {waveforms}
     </ChannelWrapper>;
   }
 }
