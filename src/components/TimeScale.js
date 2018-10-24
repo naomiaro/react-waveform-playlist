@@ -186,7 +186,7 @@ TimeScale.defaultProps = {
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
   // time length in seconds
-  duration: 30,
+  duration: 0,
   samplesPerPixel: 1000,
   sampleRate: 48000,
   controlWidth: 0,

@@ -46,17 +46,17 @@ storiesOf('TimeScale', module)
   .add('Default Values.', () => (
     <TimeScale></TimeScale>
   ))
-  .add('Default Values + device scale.', () => (
-    <TimeScale scale={scale}></TimeScale>
+  .add('30s duration + device scale.', () => (
+    <TimeScale duration={30} scale={scale}></TimeScale>
   ))
-  .add('Default Values + 100 controlWidth + device scale.', () => (
-    <TimeScale controlWidth={100} scale={scale}></TimeScale>
+  .add('60s duration + 100 controlWidth + device scale.', () => (
+    <TimeScale duration={30} controlWidth={100} scale={scale}></TimeScale>
   ))
-  .add('With 60 second duration at 3000 samplesPerPixel, 48000 sampleRate, 0 controlWidth + device scale.', () => (
+  .add('60s duration at 3000 samplesPerPixel, 48000 sampleRate, 0 controlWidth + device scale.', () => (
     <TimeScale duration={60} samplesPerPixel={3000} scale={scale}></TimeScale>
   ))
-  .add('With theme + device scale.', () => (
+  .add('30s duration + theme + device scale.', () => (
     <ThemeProvider theme={theme}>
-      <TimeScale scale={scale}></TimeScale>
+      <TimeScale duration={30} scale={scale}></TimeScale>
     </ThemeProvider>
   ));
