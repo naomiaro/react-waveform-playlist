@@ -16,7 +16,6 @@ const {
 
 const theme = {
   waveOutlineColor: 'green',
-  waveHeight: 65,
   timeColor: 'red',
 };
 
@@ -34,7 +33,7 @@ storiesOf('Channel', module)
   ))
   .add('BBC Waveform Peaks & devicePixelRatio & theming.', () => (
     <ThemeProvider theme={theme}>
-      <Channel peaks={data} length={length} bits={bits} scale={scale}></Channel>
+      <Channel peaks={data} length={length} bits={bits} scale={scale} waveHeight={65}></Channel>
     </ThemeProvider>
   ));
 

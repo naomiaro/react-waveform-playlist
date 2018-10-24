@@ -3,7 +3,7 @@ import styled, { withTheme } from 'styled-components';
 
 const Waveform = styled.canvas`
   width: ${props => props.cssWidth}px;
-  height: ${props => props.theme.waveHeight}px;
+  height: ${props => props.waveHeight}px;
 `;
 
 class Channel extends Component {
@@ -24,9 +24,9 @@ class Channel extends Component {
   }
 
   draw() {
-    const { peaks, bits, length, theme, scale } = this.props;
+    const { peaks, bits, length, waveHeight, theme, scale } = this.props;
     const canvas = this.canvas;
-    const height = theme.waveHeight;
+    const height = waveHeight;
     const width = length;
     const cc = canvas.getContext('2d');
     const h2 = height / 2;
@@ -52,13 +52,12 @@ class Channel extends Component {
   }
 
   render() {
-    const { length, theme, scale } = this.props;
-    const height = theme.waveHeight;
+    const { length, waveHeight, scale } = this.props;
 
     return <Waveform
       cssWidth={ length }
       width={ length * scale }
-      height={ height * scale }
+      height={ waveHeight * scale }
       ref={ this.setCanvasRef } />;
   }
 }
@@ -67,14 +66,14 @@ Channel.defaultProps = {
   theme: {
     // color of the waveform outline
     waveOutlineColor: 'black',
-    // height in CSS pixels of each canvas element a waveform is on.
-    waveHeight: 80,
   },
   // checking `window.devicePixelRatio` when drawing to canvas.
   scale: 1,
   peaks: [],
   length: 0,
   bits: 0,
+  // height in CSS pixels of each canvas element a waveform is on.
+  waveHeight: 80,
 };
 
 export default withTheme(Channel);
