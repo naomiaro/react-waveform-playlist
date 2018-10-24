@@ -4,7 +4,15 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import Channel from '../src/components/Channel';
 import TimeScale from '../src/components/TimeScale';
+import TrackControls from '../src/components/TrackControls';
 import BBCWaveformData from '../media/json/vocals.json';
+
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faVolumeUp, faVolumeDown } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faVolumeUp);
+library.add(faVolumeDown);
 
 const {
   sample_rate: sampleRate,
@@ -69,4 +77,9 @@ storiesOf('TimeScale', module)
     <ThemeProvider theme={theme}>
       <TimeScale duration={30} scale={scale}></TimeScale>
     </ThemeProvider>
+  ));
+
+storiesOf('TrackControls', module)
+  .add('Default Values.', () => (
+    <TrackControls></TrackControls>
   ));
