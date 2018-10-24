@@ -19,13 +19,18 @@ const theme = {
   waveHeight: 65,
 };
 
+const scale = window.devicePixelRatio;
+
 storiesOf('Channel', module)
-  .add('With BBC Waveform Peaks', () => (
+  .add('BBC Waveform Peaks', () => (
     <Channel peaks={data} length={length} bits={bits}></Channel>
   ))
-  .add('With BBC Waveform Peaks and a custom theme', () => (
+  .add('BBC Waveform Peaks & devicePixelRatio', () => (
+    <Channel peaks={data} length={length} bits={bits} scale={scale}></Channel>
+  ))
+  .add('BBC Waveform Peaks & devicePixelRatio & theming', () => (
     <ThemeProvider theme={theme}>
-      <Channel peaks={data} length={length} bits={bits}></Channel>
+      <Channel peaks={data} length={length} bits={bits} scale={scale}></Channel>
     </ThemeProvider>
   ));
 

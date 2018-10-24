@@ -3,7 +3,7 @@ import styled, { withTheme } from 'styled-components';
 
 const Waveform = styled.canvas`
   width: ${props => props.cssWidth}px;
-  height: ${props => props.cssHeight}px;
+  height: ${props => props.theme.waveHeight}px;
 `;
 
 class Channel extends Component {
@@ -12,7 +12,7 @@ class Channel extends Component {
 
     this.setCanvasRef = canvas => {
       if (canvas) {
-        const scale = window.devicePixelRatio;
+        const { scale } = this.props;
         // Normalize coordinate system to use css pixels.
         const cc = canvas.getContext('2d');
         cc.scale(scale, scale);
@@ -58,13 +58,11 @@ class Channel extends Component {
   }
 
   render() {
-    const { length, theme } = this.props;
+    const { length, theme, scale } = this.props;
     const height = theme.waveHeight;
-    const scale = window.devicePixelRatio;
 
     return <Waveform
       cssWidth={ length }
-      cssHeight={ height }
       width={ length * scale }
       height={ height * scale }
       ref={ this.setCanvasRef } />;
@@ -78,6 +76,7 @@ Channel.defaultProps = {
     // height in CSS pixels of each canvas element a waveform is on.
     waveHeight: 80,
   },
+  scale: 1,
 };
 
 export default withTheme(Channel);
