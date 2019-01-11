@@ -2,9 +2,11 @@ import React from "react";
 import { ThemeProvider } from "styled-components";
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
-import Channel from "../src/components/Channel";
+import Channel, { ChannelContainer } from "../src/components/Channel";
 import TimeScale from "../src/components/TimeScale";
 import TrackControls from "../src/components/TrackControls";
+import Track, { TrackContainer } from "../src/components/Track";
+import Playlist from "../src/components/Playlist";
 import BBCWaveformData from "../media/json/vocals.json";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -104,3 +106,65 @@ storiesOf("TrackControls", module).add("Basic Controls.", () => (
     onVolumeChange={action("volume-change")}
   />
 ));
+
+storiesOf("Track", module)
+  .add("Mono Track.", () => (
+    <ThemeProvider theme={theme}>
+      <Playlist>
+        <TrackContainer>
+          <Track waveHeight={100}>
+            <TrackControls
+              onMuteClick={action("mute-click")}
+              onSoloClick={action("solo-click")}
+              onVolumeChange={action("volume-change")}
+              controlHeight={100}
+            />
+            <ChannelContainer>
+              <Channel
+                peaks={data}
+                length={length}
+                bits={bits}
+                scale={scale}
+                progress={100}
+                waveHeight={100}
+              />
+            </ChannelContainer>
+          </Track>
+        </TrackContainer>
+      </Playlist>
+    </ThemeProvider>
+  ))
+  .add("Stereo Track.", () => (
+    <ThemeProvider theme={theme}>
+      <Playlist>
+        <TrackContainer>
+          <Track numChannels={2}>
+            <TrackControls
+              onMuteClick={action("mute-click")}
+              onSoloClick={action("solo-click")}
+              onVolumeChange={action("volume-change")}
+              controlHeight={160}
+            />
+            <ChannelContainer>
+              <Channel
+                peaks={data}
+                length={length}
+                bits={bits}
+                scale={scale}
+                progress={100}
+                index={0}
+              />
+              <Channel
+                peaks={data}
+                length={length}
+                bits={bits}
+                scale={scale}
+                progress={100}
+                index={1}
+              />
+            </ChannelContainer>
+          </Track>
+        </TrackContainer>
+      </Playlist>
+    </ThemeProvider>
+  ));

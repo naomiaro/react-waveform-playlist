@@ -8,7 +8,8 @@ const Controls = styled.div`
   z-index: 10;
   background: white;
   text-align: center;
-  width: 200px;
+  width: ${props => props.controlWidth}px;
+  height: ${props => props.controlHeight}px;
 `;
 
 const Header = styled.header`
@@ -112,10 +113,17 @@ const VolumeSlider = styled.input`
 
 class TrackControls extends Component {
   render() {
-    const { onMuteClick, onSoloClick, onVolumeChange } = this.props;
+    const {
+      onMuteClick,
+      onSoloClick,
+      onVolumeChange,
+      controlWidth,
+      trackName,
+      controlHeight
+    } = this.props;
     return (
-      <Controls>
-        <Header />
+      <Controls controlWidth={controlWidth} controlHeight={controlHeight}>
+        <Header>{trackName}</Header>
         <ButtonGroup>
           <Button onClick={onMuteClick}>Mute</Button>
           <Button onClick={onSoloClick}>Solo</Button>
@@ -132,6 +140,11 @@ class TrackControls extends Component {
 
 TrackControls.defaultProps = {
   theme: {},
+  // height in CSS pixels of the controls.
+  controlHeight: 80,
+  // width in CSS pixels of the controls.
+  controlWidth: 200,
+  trackName: "Track 1",
   onMuteClick: () => {},
   onSoloClick: () => {},
   onVolumeChange: () => {}

@@ -3,6 +3,10 @@ import styled, { withTheme } from "styled-components";
 
 const MAX_CANVAS_WIDTH = 1000;
 
+const ChannelContainer = styled.div`
+  position: relative;
+`;
+
 const Progress = styled.div`
   position: absolute;
   background: ${props => props.theme.waveProgressColor};
@@ -13,16 +17,13 @@ const Progress = styled.div`
 const Waveform = styled.canvas`
   float: left;
   position: relative;
-  margin: 0;
-  padding: 0;
   width: ${props => props.cssWidth}px;
   height: ${props => props.waveHeight}px;
 `;
 
 const ChannelWrapper = styled.div`
   position: absolute;
-  margin: 0;
-  padding: 0;
+  top: ${props => props.waveHeight * props.index}px;
   background: ${props => props.theme.waveFillColor};
   width: ${props => props.cssWidth}px;
   height: ${props => props.waveHeight}px;
@@ -85,7 +86,7 @@ class Channel extends Component {
   }
 
   render() {
-    const { length, waveHeight, scale, progress, theme } = this.props;
+    const { length, waveHeight, scale, progress, theme, index } = this.props;
 
     let totalWidth = length;
     let waveformCount = 0;
@@ -109,7 +110,12 @@ class Channel extends Component {
     }
 
     return (
-      <ChannelWrapper cssWidth={length} theme={theme} waveHeight={waveHeight}>
+      <ChannelWrapper
+        index={index}
+        cssWidth={length}
+        theme={theme}
+        waveHeight={waveHeight}
+      >
         <Progress progress={progress} theme={theme} waveHeight={waveHeight} />
         {waveforms}
       </ChannelWrapper>
@@ -131,8 +137,10 @@ Channel.defaultProps = {
   bits: 0,
   // height in CSS pixels of each canvas element a waveform is on.
   waveHeight: 80,
+  index: 0,
   // width in CSS pixels of the progress on the channel.
   progress: 0
 };
 
 export default withTheme(Channel);
+export { ChannelContainer };
