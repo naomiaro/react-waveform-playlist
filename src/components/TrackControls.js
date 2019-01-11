@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import styled, { withTheme } from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { Component } from "react";
+import styled, { withTheme } from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Controls = styled.div`
   position: absolute;
@@ -20,9 +20,27 @@ const Header = styled.header`
 `;
 
 const ButtonGroup = styled.div`
+  button:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  button:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
 `;
 
-const Button = styled.span`
+const Button = styled.button.attrs({
+  type: "button"
+})`
+  border: 1px solid black;
+  padding: 5px;
+
+  :focus {
+    outline: none;
+    background-color: #bbb;
+  }
 `;
 
 const VolumeSliderWrapper = styled.label`
@@ -84,38 +102,39 @@ const VolumeSlider = styled.input`
   }
 
   &:focus::-webkit-slider-runnable-track {
-    background: #ccc;
+    background: #bbb;
   }
 
   &:focus::-moz-range-track {
-    background: #ccc;
+    background: #bbb;
   }
 `;
 
 class TrackControls extends Component {
-
   render() {
+    const { onMuteClick, onSoloClick, onVolumeChange } = this.props;
     return (
       <Controls>
-        <Header></Header>
+        <Header />
         <ButtonGroup>
-          <Button>Mute</Button>
-          <Button>Solo</Button>
+          <Button onClick={onMuteClick}>Mute</Button>
+          <Button onClick={onSoloClick}>Solo</Button>
         </ButtonGroup>
         <VolumeSliderWrapper>
           <FontAwesomeIcon icon="volume-down" />
-          <VolumeSlider type='range'/>
+          <VolumeSlider type="range" onChange={onVolumeChange} />
           <FontAwesomeIcon icon="volume-up" />
         </VolumeSliderWrapper>
       </Controls>
     );
   }
-};
+}
 
 TrackControls.defaultProps = {
-  theme: {
-
-  },
+  theme: {},
+  onMuteClick: () => {},
+  onSoloClick: () => {},
+  onVolumeChange: () => {}
 };
 
 export default withTheme(TrackControls);
