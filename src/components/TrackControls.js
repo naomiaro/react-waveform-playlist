@@ -47,16 +47,16 @@ const Button = styled.button.attrs({
 const VolumeSliderWrapper = styled.label`
   margin: 1em auto;
   width: 100%;
-  display: inline-block;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
 `;
 
 const VolumeSlider = styled.input`
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  display: inline-block;
-  width: 75%;
-  padding: 0 5px;
 
   &::-webkit-slider-runnable-track {
     height: 8px;

@@ -10,8 +10,7 @@
     "npm": "^6.4.1",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-scripts": "^2.1.3",
-    "styled-components": "^4.0.2"
+    "react-scripts": "^2.1.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -33,6 +32,10 @@
     "@storybook/addon-actions": "^4.1.6",
     "@storybook/react": "^4.1.6",
     "babel-core": "^6.26.3",
-    "babel-plugin-styled-components": "^1.8.0"
+    "babel-plugin-styled-components": "^1.8.0",
+    "styled-components": "^4.0.2"
+  },
+  "peerDependencies": {
+    "styled-components": ">= 4"
   }
 }
