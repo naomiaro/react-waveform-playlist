@@ -5,4 +5,9 @@ const Playlist = styled.div`
 	position: relative;
 `;
 
+const ScrollContainer = styled.div`
+	overflow: auto;
+`;
+
 export default Playlist;
+export { ScrollContainer };

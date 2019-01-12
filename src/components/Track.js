@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import styled, { withTheme } from "styled-components";
 
-const TrackContainer = styled.div`
-	overflow: auto;
-`;
-
 const ChannelContainer = styled.div`
 	height: ${props => props.waveHeight * props.numChannels}px;
 	margin-left: ${props => props.controlWidth}px;
@@ -26,4 +22,3 @@ Track.defaultProps = {
 };
 
 export default withTheme(Track);
-export { TrackContainer };

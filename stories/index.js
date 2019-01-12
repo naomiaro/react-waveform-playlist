@@ -14,8 +14,8 @@ import {
   VolumeSlider,
   VolumeUpIcon
 } from "../src/components/TrackControls";
-import Track, { TrackContainer } from "../src/components/Track";
-import Playlist from "../src/components/Playlist";
+import Track from "../src/components/Track";
+import Playlist, { ScrollContainer } from "../src/components/Playlist";
 import BBCWaveformData from "../media/json/vocals.json";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -33,10 +33,10 @@ const {
 } = BBCWaveformData;
 
 const theme = {
-  waveOutlineColor: "green",
-  waveFillColor: "white",
-  waveProgressColor: "yellow",
-  timeColor: "red"
+  waveOutlineColor: "white",
+  waveFillColor: "green",
+  waveProgressColor: "orange",
+  timeColor: "grey"
 };
 
 const scale = window.devicePixelRatio;
@@ -126,7 +126,7 @@ storiesOf("Track", module)
   .add("Mono Track.", () => (
     <ThemeProvider theme={theme}>
       <Playlist>
-        <TrackContainer>
+        <ScrollContainer>
           <Track waveHeight={100}>
             <Controls controlWidth={200} controlHeight={100}>
               <Header>Track 1</Header>
@@ -151,14 +151,14 @@ storiesOf("Track", module)
               />
             </ChannelContainer>
           </Track>
-        </TrackContainer>
+        </ScrollContainer>
       </Playlist>
     </ThemeProvider>
   ))
   .add("Stereo Track.", () => (
     <ThemeProvider theme={theme}>
       <Playlist>
-        <TrackContainer>
+        <ScrollContainer>
           <Track numChannels={2}>
             <Controls controlWidth={200} controlHeight={160}>
               <Header>Track 1</Header>
@@ -191,7 +191,46 @@ storiesOf("Track", module)
               />
             </ChannelContainer>
           </Track>
-        </TrackContainer>
+        </ScrollContainer>
+      </Playlist>
+    </ThemeProvider>
+  ))
+  .add("Mono Track with Timescale.", () => (
+    <ThemeProvider theme={theme}>
+      <Playlist>
+        <ScrollContainer>
+          <TimeScale
+            duration={(samplesPerPixel * length) / sampleRate}
+            samplesPerPixel={samplesPerPixel}
+            sampleRate={sampleRate}
+            scale={scale}
+            controlWidth={200}
+          />
+          <Track waveHeight={100}>
+            <Controls controlWidth={200} controlHeight={100}>
+              <Header>Track 1</Header>
+              <ButtonGroup>
+                <Button onClick={action("mute-click")}>Mute</Button>
+                <Button onClick={action("solo-click")}>Solo</Button>
+              </ButtonGroup>
+              <VolumeSliderWrapper>
+                <VolumeDownIcon />
+                <VolumeSlider onChange={action("volume-change")} />
+                <VolumeUpIcon />
+              </VolumeSliderWrapper>
+            </Controls>
+            <ChannelContainer>
+              <Channel
+                peaks={data}
+                length={length}
+                bits={bits}
+                scale={scale}
+                progress={100}
+                waveHeight={100}
+              />
+            </ChannelContainer>
+          </Track>
+        </ScrollContainer>
       </Playlist>
     </ThemeProvider>
   ));
