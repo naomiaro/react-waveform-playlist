@@ -4,13 +4,21 @@ import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 import Channel, { ChannelContainer } from "../src/components/Channel";
 import TimeScale from "../src/components/TimeScale";
-import TrackControls from "../src/components/TrackControls";
+import {
+  Controls,
+  Header,
+  ButtonGroup,
+  Button,
+  VolumeSliderWrapper,
+  VolumeDownIcon,
+  VolumeSlider,
+  VolumeUpIcon
+} from "../src/components/TrackControls";
 import Track, { TrackContainer } from "../src/components/Track";
 import Playlist from "../src/components/Playlist";
 import BBCWaveformData from "../media/json/vocals.json";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVolumeUp, faVolumeDown } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faVolumeUp);
@@ -100,11 +108,18 @@ storiesOf("TimeScale", module)
   ));
 
 storiesOf("TrackControls", module).add("Basic Controls.", () => (
-  <TrackControls
-    onMuteClick={action("mute-click")}
-    onSoloClick={action("solo-click")}
-    onVolumeChange={action("volume-change")}
-  />
+  <Controls controlWidth={200} controlHeight={160}>
+    <Header>Track 1</Header>
+    <ButtonGroup>
+      <Button onClick={action("mute-click")}>Mute</Button>
+      <Button onClick={action("solo-click")}>Solo</Button>
+    </ButtonGroup>
+    <VolumeSliderWrapper>
+      <VolumeDownIcon />
+      <VolumeSlider onChange={action("volume-change")} />
+      <VolumeUpIcon />
+    </VolumeSliderWrapper>
+  </Controls>
 ));
 
 storiesOf("Track", module)
@@ -113,12 +128,18 @@ storiesOf("Track", module)
       <Playlist>
         <TrackContainer>
           <Track waveHeight={100}>
-            <TrackControls
-              onMuteClick={action("mute-click")}
-              onSoloClick={action("solo-click")}
-              onVolumeChange={action("volume-change")}
-              controlHeight={100}
-            />
+            <Controls controlWidth={200} controlHeight={100}>
+              <Header>Track 1</Header>
+              <ButtonGroup>
+                <Button onClick={action("mute-click")}>Mute</Button>
+                <Button onClick={action("solo-click")}>Solo</Button>
+              </ButtonGroup>
+              <VolumeSliderWrapper>
+                <VolumeDownIcon />
+                <VolumeSlider onChange={action("volume-change")} />
+                <VolumeUpIcon />
+              </VolumeSliderWrapper>
+            </Controls>
             <ChannelContainer>
               <Channel
                 peaks={data}
@@ -139,12 +160,18 @@ storiesOf("Track", module)
       <Playlist>
         <TrackContainer>
           <Track numChannels={2}>
-            <TrackControls
-              onMuteClick={action("mute-click")}
-              onSoloClick={action("solo-click")}
-              onVolumeChange={action("volume-change")}
-              controlHeight={160}
-            />
+            <Controls controlWidth={200} controlHeight={160}>
+              <Header>Track 1</Header>
+              <ButtonGroup>
+                <Button onClick={action("mute-click")}>Mute</Button>
+                <Button onClick={action("solo-click")}>Solo</Button>
+              </ButtonGroup>
+              <VolumeSliderWrapper>
+                <VolumeDownIcon />
+                <VolumeSlider onChange={action("volume-change")} />
+                <VolumeUpIcon />
+              </VolumeSliderWrapper>
+            </Controls>
             <ChannelContainer>
               <Channel
                 peaks={data}

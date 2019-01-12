@@ -1,11 +1,10 @@
-import React, { Component } from "react";
-import styled, { withTheme } from "styled-components";
+import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Controls = styled.div`
   position: absolute;
+  z-index: 1;
   left: 0;
-  z-index: 10;
   background: white;
   text-align: center;
   width: ${props => props.controlWidth}px;
@@ -53,7 +52,9 @@ const VolumeSliderWrapper = styled.label`
   justify-content: center;
 `;
 
-const VolumeSlider = styled.input`
+const VolumeSlider = styled.input.attrs({
+  type: "range"
+})`
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -111,43 +112,21 @@ const VolumeSlider = styled.input`
   }
 `;
 
-class TrackControls extends Component {
-  render() {
-    const {
-      onMuteClick,
-      onSoloClick,
-      onVolumeChange,
-      controlWidth,
-      trackName,
-      controlHeight
-    } = this.props;
-    return (
-      <Controls controlWidth={controlWidth} controlHeight={controlHeight}>
-        <Header>{trackName}</Header>
-        <ButtonGroup>
-          <Button onClick={onMuteClick}>Mute</Button>
-          <Button onClick={onSoloClick}>Solo</Button>
-        </ButtonGroup>
-        <VolumeSliderWrapper>
-          <FontAwesomeIcon icon="volume-down" />
-          <VolumeSlider type="range" onChange={onVolumeChange} />
-          <FontAwesomeIcon icon="volume-up" />
-        </VolumeSliderWrapper>
-      </Controls>
-    );
-  }
-}
+const VolumeDownIcon = styled(FontAwesomeIcon).attrs({
+  icon: "volume-down"
+})``;
 
-TrackControls.defaultProps = {
-  theme: {},
-  // height in CSS pixels of the controls.
-  controlHeight: 80,
-  // width in CSS pixels of the controls.
-  controlWidth: 200,
-  trackName: "Track 1",
-  onMuteClick: () => {},
-  onSoloClick: () => {},
-  onVolumeChange: () => {}
+const VolumeUpIcon = styled(FontAwesomeIcon).attrs({
+  icon: "volume-up"
+})``;
+
+export {
+  Controls,
+  Header,
+  ButtonGroup,
+  Button,
+  VolumeSliderWrapper,
+  VolumeDownIcon,
+  VolumeSlider,
+  VolumeUpIcon
 };
-
-export default withTheme(TrackControls);
