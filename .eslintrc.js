@@ -1,0 +1,8 @@
+module.exports = {
+	parser: "babel-eslint",
+	extends: "react-app",
+	env: {
+		browser: true,
+		node: true
+	}
+};

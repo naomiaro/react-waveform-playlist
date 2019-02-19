@@ -19,8 +19,16 @@
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint",
+      "prettier --write",
+      "git add"
+    ],
+    "*.{json,graphql,md,css,scss,less}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "browserslist": [
     ">0.2%",
@@ -33,6 +41,11 @@
     "@storybook/react": "^4.1.6",
     "babel-core": "^6.26.3",
     "babel-plugin-styled-components": "^1.8.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.12.4",
+    "prettier": "^1.16.4",
     "styled-components": "^4.0.2"
   },
   "peerDependencies": {

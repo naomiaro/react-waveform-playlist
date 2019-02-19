@@ -35,15 +35,7 @@ class Channel extends Component {
     this.canvases = [];
   }
 
-  shouldComponentUpdate() {
-    this.canvases = [];
-  }
-
   componentDidMount() {
-    this.draw();
-  }
-
-  componentDidUpdate() {
     this.draw();
   }
 

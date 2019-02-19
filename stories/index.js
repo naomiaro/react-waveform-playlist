@@ -18,12 +18,6 @@ import Track from "../src/components/Track";
 import Playlist, { ScrollContainer } from "../src/components/Playlist";
 import BBCWaveformData from "../media/json/vocals.json";
 
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faVolumeUp, faVolumeDown } from "@fortawesome/free-solid-svg-icons";
-
-library.add(faVolumeUp);
-library.add(faVolumeDown);
-
 const {
   sample_rate: sampleRate,
   samples_per_pixel: samplesPerPixel,

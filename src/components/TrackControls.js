@@ -1,5 +1,10 @@
 import styled from "styled-components";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faVolumeUp, faVolumeDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+library.add(faVolumeUp);
+library.add(faVolumeDown);
 
 const Controls = styled.div`
   position: absolute;
@@ -36,11 +41,6 @@ const Button = styled.button.attrs({
 })`
   border: 1px solid black;
   padding: 5px;
-
-  :focus {
-    outline: none;
-    background-color: #bbb;
-  }
 `;
 
 const VolumeSliderWrapper = styled.label`

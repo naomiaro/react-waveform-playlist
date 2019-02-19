@@ -108,10 +108,6 @@ class TimeScale extends Component {
     this.draw();
   }
 
-  componentDidUpdate() {
-    this.draw();
-  }
-
   draw() {
     const canvas = this.canvas;
     const ctx = canvas.getContext("2d");
