@@ -39,6 +39,14 @@ class Channel extends Component {
     this.draw();
   }
 
+  componentDidUpdate({ peaks: prevPeaks }) {
+    const { peaks: nextPeaks } = this.props;
+
+    if (prevPeaks !== nextPeaks) {
+      this.draw();
+    }
+  }
+
   draw() {
     const { peaks, bits, waveHeight, theme, scale } = this.props;
 

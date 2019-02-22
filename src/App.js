@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { ThemeProvider } from "styled-components";
-import Channel, { ChannelContainer } from "../src/components/Channel";
-import TimeScale from "../src/components/TimeScale";
+import extractPeaks from "webaudio-peaks";
+import Channel, { ChannelContainer } from "./components/Channel";
+import TimeScale from "./components/TimeScale";
 import {
   Controls,
   Header,
@@ -11,10 +12,15 @@ import {
   VolumeDownIcon,
   VolumeSlider,
   VolumeUpIcon
-} from "../src/components/TrackControls";
-import Track from "../src/components/Track";
-import Playlist, { ScrollContainer } from "../src/components/Playlist";
+} from "./components/TrackControls";
+import Track from "./components/Track";
+import Playlist, { ScrollContainer } from "./components/Playlist";
+import ErrorBoundary from "./components/Track";
 import BBCWaveformData from "./test.json";
+
+import prepareAudio from "./loading";
+
+const AUDIO_CONTEXT = new AudioContext();
 
 const {
   sample_rate: sampleRate,
@@ -47,7 +53,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    requestAnimationFrame(this.tick);
+    // requestAnimationFrame(this.tick);
   }
 
   tick = () => {
@@ -61,7 +67,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div>
         <ThemeProvider theme={theme}>
           <Playlist>
             <ScrollContainer>
@@ -105,6 +111,32 @@ class App extends Component {
             </ScrollContainer>
           </Playlist>
         </ThemeProvider>
+        <button
+          onClick={() => {
+            const loader = prepareAudio("audio/Guitar30.mp3", AUDIO_CONTEXT);
+            loader
+              .then(buffer => {
+                const { bits, data, length } = extractPeaks(
+                  buffer,
+                  samplesPerPixel,
+                  true,
+                  0,
+                  buffer.length,
+                  8
+                );
+
+                this.setState({
+                  bits,
+                  data: data[0],
+                  length,
+                  sampleRate: buffer.sampleRate
+                });
+              })
+              .catch(console);
+          }}
+        >
+          Load Guitar
+        </button>
       </div>
     );
   }
