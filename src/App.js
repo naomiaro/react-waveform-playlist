@@ -15,7 +15,7 @@ import {
 } from "./components/TrackControls";
 import Track from "./components/Track";
 import Playlist, { ScrollContainer } from "./components/Playlist";
-import ErrorBoundary from "./components/Track";
+import ErrorBoundary from "./components/ErrorBoundary";
 import BBCWaveformData from "./test.json";
 
 import prepareAudio from "./loading";
@@ -67,77 +67,79 @@ class App extends Component {
 
   render() {
     return (
-      <div>
-        <ThemeProvider theme={theme}>
-          <Playlist>
-            <ScrollContainer>
-              <TimeScale
-                duration={
-                  (this.state.samplesPerPixel * this.state.length) /
-                  this.state.sampleRate
-                }
-                samplesPerPixel={this.state.samplesPerPixel}
-                sampleRate={this.state.sampleRate}
-                scale={scale}
-                controlWidth={this.state.controlWidth}
-              />
-              <Track waveHeight={this.state.waveHeight}>
-                <Controls
+      <ErrorBoundary>
+        <div>
+          <ThemeProvider theme={theme}>
+            <Playlist>
+              <ScrollContainer>
+                <TimeScale
+                  duration={
+                    (this.state.samplesPerPixel * this.state.length) /
+                    this.state.sampleRate
+                  }
+                  samplesPerPixel={this.state.samplesPerPixel}
+                  sampleRate={this.state.sampleRate}
+                  scale={scale}
                   controlWidth={this.state.controlWidth}
-                  controlHeight={this.state.controlHeight}
-                >
-                  <Header>Track 1</Header>
-                  <ButtonGroup>
-                    <Button>Mute</Button>
-                    <Button>Solo</Button>
-                  </ButtonGroup>
-                  <VolumeSliderWrapper>
-                    <VolumeDownIcon />
-                    <VolumeSlider />
-                    <VolumeUpIcon />
-                  </VolumeSliderWrapper>
-                </Controls>
-                <ChannelContainer>
-                  <Channel
-                    peaks={this.state.data}
-                    length={this.state.length}
-                    bits={this.state.bits}
-                    scale={scale}
-                    progress={this.state.progress}
-                    waveHeight={this.state.waveHeight}
-                  />
-                </ChannelContainer>
-              </Track>
-            </ScrollContainer>
-          </Playlist>
-        </ThemeProvider>
-        <button
-          onClick={() => {
-            const loader = prepareAudio("audio/Guitar30.mp3", AUDIO_CONTEXT);
-            loader
-              .then(buffer => {
-                const { bits, data, length } = extractPeaks(
-                  buffer,
-                  samplesPerPixel,
-                  true,
-                  0,
-                  buffer.length,
-                  8
-                );
+                />
+                <Track waveHeight={this.state.waveHeight}>
+                  <Controls
+                    controlWidth={this.state.controlWidth}
+                    controlHeight={this.state.controlHeight}
+                  >
+                    <Header>Track 1</Header>
+                    <ButtonGroup>
+                      <Button>Mute</Button>
+                      <Button>Solo</Button>
+                    </ButtonGroup>
+                    <VolumeSliderWrapper>
+                      <VolumeDownIcon />
+                      <VolumeSlider />
+                      <VolumeUpIcon />
+                    </VolumeSliderWrapper>
+                  </Controls>
+                  <ChannelContainer>
+                    <Channel
+                      peaks={this.state.data}
+                      length={this.state.length}
+                      bits={this.state.bits}
+                      scale={scale}
+                      progress={this.state.progress}
+                      waveHeight={this.state.waveHeight}
+                    />
+                  </ChannelContainer>
+                </Track>
+              </ScrollContainer>
+            </Playlist>
+          </ThemeProvider>
+          <button
+            onClick={() => {
+              const loader = prepareAudio("audio/Guitar30.mp3", AUDIO_CONTEXT);
+              loader
+                .then(buffer => {
+                  const { bits, data, length } = extractPeaks(
+                    buffer,
+                    samplesPerPixel,
+                    true,
+                    0,
+                    buffer.length,
+                    8
+                  );
 
-                this.setState({
-                  bits,
-                  data: data[0],
-                  length,
-                  sampleRate: buffer.sampleRate
-                });
-              })
-              .catch(console);
-          }}
-        >
-          Load Guitar
-        </button>
-      </div>
+                  this.setState({
+                    bits,
+                    data: data[0],
+                    length,
+                    sampleRate: buffer.sampleRate
+                  });
+                })
+                .catch(console);
+            }}
+          >
+            Load Guitar
+          </button>
+        </div>
+      </ErrorBoundary>
     );
   }
 }
