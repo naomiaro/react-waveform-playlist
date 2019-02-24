@@ -19,8 +19,10 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import BBCWaveformData from "./test.json";
 
 import prepareAudio from "./loading";
+import AudioEngine from "./playout";
 
 const AUDIO_CONTEXT = new AudioContext();
+const AUDIO_ENGINE = new AudioEngine();
 
 const {
   sample_rate: sampleRate,
@@ -137,6 +139,26 @@ class App extends Component {
             }}
           >
             Load Guitar
+          </button>
+          <button
+            onClick={() => {
+              AUDIO_ENGINE.load([
+                "audio/Vocals30.mp3",
+                "audio/Guitar30.mp3",
+                "audio/PianoSynth30.mp3",
+                "audio/BassDrums30.mp3"
+              ]);
+              AUDIO_ENGINE.play();
+            }}
+          >
+            Play Music
+          </button>
+          <button
+            onClick={() => {
+              AUDIO_ENGINE.stop();
+            }}
+          >
+            Stop Music
           </button>
         </div>
       </ErrorBoundary>

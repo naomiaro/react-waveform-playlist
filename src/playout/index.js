@@ -1,114 +1,41 @@
-import { FADEIN, FADEOUT, createFadeIn, createFadeOut } from "fade-maker";
+import prepareAudio from "../loading";
+import WebAudio from "./webaudio";
+
+const AUDIO_CONTEXT = new AudioContext();
+
+// reference api https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement
 
 export default class {
-  constructor(ac, buffer) {
-    this.ac = ac;
-    this.gain = 1;
-    this.buffer = buffer;
-    this.destination = this.ac.destination;
-  }
+	load(filenames = []) {
+		const buffers = Promise.all(
+			filenames.map(file => prepareAudio(file, AUDIO_CONTEXT))
+		);
 
-  applyFade(type, start, duration, shape = "logarithmic") {
-    if (type === FADEIN) {
-      createFadeIn(this.fadeGain.gain, shape, start, duration);
-    } else if (type === FADEOUT) {
-      createFadeOut(this.fadeGain.gain, shape, start, duration);
-    } else {
-      throw new Error("Unsupported fade type");
-    }
-  }
+		this.filenames = filenames;
+		this.buffers = buffers;
 
-  applyFadeIn(start, duration, shape = "logarithmic") {
-    this.applyFade(FADEIN, start, duration, shape);
-  }
+		const sources = buffers.then(buffers =>
+			buffers.map(buffer => new WebAudio(AUDIO_CONTEXT, buffer))
+		);
 
-  applyFadeOut(start, duration, shape = "logarithmic") {
-    this.applyFade(FADEOUT, start, duration, shape);
-  }
+		this.sources = sources;
+	}
 
-  isPlaying() {
-    return this.source !== undefined;
-  }
+	play() {
+		this.playBack = this.sources.then(sources => {
+			return sources.map(source => source.setUpSource());
+		});
 
-  getDuration() {
-    return this.buffer.duration;
-  }
+		this.sources.then(sources => {
+			sources.forEach(source => source.play(0, 0, source.getDuration()));
+		});
 
-  setAudioContext(audioContext) {
-    this.ac = audioContext;
-    this.destination = this.ac.destination;
-  }
+		return this.playBack;
+	}
 
-  setUpSource() {
-    this.source = this.ac.createBufferSource();
-    this.source.buffer = this.buffer;
-
-    const sourcePromise = new Promise(resolve => {
-      // keep track of the buffer state.
-      this.source.onended = () => {
-        this.source.disconnect();
-        this.fadeGain.disconnect();
-        this.volumeGain.disconnect();
-        this.shouldPlayGain.disconnect();
-        this.masterGain.disconnect();
-
-        this.source = undefined;
-        this.fadeGain = undefined;
-        this.volumeGain = undefined;
-        this.shouldPlayGain = undefined;
-        this.masterGain = undefined;
-
-        resolve();
-      };
-    });
-
-    this.fadeGain = this.ac.createGain();
-    // used for track volume slider
-    this.volumeGain = this.ac.createGain();
-    // used for solo/mute
-    this.shouldPlayGain = this.ac.createGain();
-    this.masterGain = this.ac.createGain();
-
-    this.source.connect(this.fadeGain);
-    this.fadeGain.connect(this.volumeGain);
-    this.volumeGain.connect(this.shouldPlayGain);
-    this.shouldPlayGain.connect(this.masterGain);
-    this.masterGain.connect(this.destination);
-
-    return sourcePromise;
-  }
-
-  setVolumeGainLevel(level) {
-    if (this.volumeGain) {
-      this.volumeGain.gain.value = level;
-    }
-  }
-
-  setShouldPlay(bool) {
-    if (this.shouldPlayGain) {
-      this.shouldPlayGain.gain.value = bool ? 1 : 0;
-    }
-  }
-
-  setMasterGainLevel(level) {
-    if (this.masterGain) {
-      this.masterGain.gain.value = level;
-    }
-  }
-
-  /*
-    source.start is picky when passing the end time.
-    If rounding error causes a number to make the source think
-    it is playing slightly more samples than it has it won't play at all.
-    Unfortunately it doesn't seem to work if you just give it a start time.
-  */
-  play(when, start, duration) {
-    this.source.start(when, start, duration);
-  }
-
-  stop(when = 0) {
-    if (this.source) {
-      this.source.stop(when);
-    }
-  }
+	stop() {
+		this.sources.then(sources => {
+			sources.forEach(source => source.stop());
+		});
+	}
 }
